@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
@@ -31,7 +30,7 @@ interface AnalysisResult {
   courseStrategy: string;
 }
 
-// --- 前台：精品品牌問卷 ---
+// --- 前台：精品品牌問卷組件 ---
 const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) => {
   const [form, setForm] = useState<Partial<SurveyData>>({
     gender: '女', hasIDA: '沒有', q5_hasExp: '沒有', q7_knowVictor: '不認識也沒聽過', q9_acceptWork: '可以'
@@ -49,7 +48,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
   if (finished) return (
     <div className="max-w-xl mx-auto glass-card p-20 rounded-[4rem] text-center mt-24 border-none shadow-2xl animate-in fade-in zoom-in duration-1000">
       <div className="text-7xl mb-8">✨</div>
-      <h2 className="text-4xl font-black rainbow-text mb-6 italic">Successfully Sent</h2>
+      <h2 className="text-4xl font-black rainbow-text mb-6 italic">Taste Received</h2>
       <p className="text-slate-500 font-medium leading-relaxed">您的品味與期待已傳達。<br/>維多老師正在為您精心準備這場品牌盛宴。</p>
     </div>
   );
@@ -61,6 +60,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
         <p className="text-white/40 tracking-[0.8em] text-[10px] font-bold uppercase">學員課前調查｜維多品牌學</p>
       </div>
 
+      {/* 基本資料卡片 */}
       <div className="glass-card p-10 md:p-12 rounded-[3.5rem] space-y-10 border-none shadow-2xl">
         <div className="border-l-4 border-pink-500 pl-6">
           <h3 className="text-2xl font-black text-slate-800">基本背景調查</h3>
@@ -80,28 +80,34 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
         </div>
       </div>
 
+      {/* 品牌深度問項卡片 */}
       <div className="glass-card p-10 md:p-12 rounded-[3.5rem] space-y-12 border-none shadow-2xl">
         <div className="border-l-4 border-cyan-400 pl-6">
           <h3 className="text-2xl font-black text-slate-800">深度品牌洞察</h3>
           <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Brand Insights</p>
         </div>
+        
         <div className="space-y-10">
           <div className="space-y-4">
-            <label className="block font-black text-slate-700">1. 你認為什麼是【品牌】？<span className="text-xs text-slate-400 ml-2">(勿問AI)</span></label>
+            <label className="block font-black text-slate-700 leading-relaxed">1. 你認為什麼是【品牌】？<br/><span className="text-xs text-slate-400 font-medium italic">（請以個人認知回覆，勿上網搜索或問 AI）</span></label>
             <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q1_brandDefinition: e.target.value})} />
           </div>
+
           <div className="space-y-4">
             <label className="block font-black text-slate-700">2. 你個人最喜歡的【品牌】是哪一個？</label>
             <input required placeholder="不限產業" className="w-full p-6 rounded-3xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all" onChange={e => setForm({...form, q2_favoriteBrand: e.target.value})} />
           </div>
+
           <div className="space-y-4">
             <label className="block font-black text-slate-700">3. 為什麼喜歡？<span className="text-xs text-purple-500 ml-2 font-bold italic">至少 3 點原因</span></label>
             <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q3_whyFavorite: e.target.value})} />
           </div>
+
           <div className="space-y-4">
             <label className="block font-black text-slate-700">4. 你希望從課堂中獲得那些知識？</label>
             <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q4_knowledgeExpectation: e.target.value})} />
           </div>
+
           <div className="space-y-4">
             <label className="block font-black text-slate-700">5. 曾經執行過品牌推廣相關活動或文案嗎？</label>
             <div className="flex space-x-12 pt-2">
@@ -113,12 +119,14 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
               ))}
             </div>
           </div>
+
           {form.q5_hasExp === '有' && (
             <div className="space-y-4 animate-in slide-in-from-top-4">
               <label className="block font-black text-slate-700 italic border-l-2 border-slate-900 pl-4">6. 承上題，說明做過哪些及成效：</label>
               <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q6_expDetail: e.target.value})} />
             </div>
           )}
+
           <div className="space-y-4">
             <label className="block font-black text-slate-700">7. 你認識這次的授課講師「維多」嗎？</label>
             <select className="w-full p-6 rounded-3xl font-black bg-slate-50 border border-slate-100 cursor-pointer" onChange={e => setForm({...form, q7_knowVictor: e.target.value})}>
@@ -127,12 +135,14 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
               <option>不認識也沒聽過</option>
             </select>
           </div>
+
           {form.q7_knowVictor !== '不認識也沒聽過' && (
             <div className="space-y-4 animate-in slide-in-from-top-4">
               <label className="block font-black text-slate-700 italic border-l-2 border-slate-900 pl-4">8. 說說妳對維多的了解：</label>
               <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q8_victorDetail: e.target.value})} />
             </div>
           )}
+
           <div className="space-y-4">
             <label className="block font-black text-slate-700">9. 接受課程中有小組討論及作業嗎？</label>
             <div className="flex space-x-12 pt-2">
@@ -144,6 +154,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
               ))}
             </div>
           </div>
+
           <div className="space-y-4">
             <label className="block font-black text-slate-700">10. 有沒有想先對講師許的願？</label>
             <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q10_wishes: e.target.value})} placeholder="維多老師，我希望..." />
@@ -159,7 +170,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
   );
 };
 
-// --- 後台：管理決策中心 ---
+// --- 後台：管理決策中心組件 ---
 const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -167,14 +178,9 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
   const startAnalysis = async () => {
     setLoading(true);
     try {
-      const apiKey = process.env.API_KEY || "";
-      if (!apiKey) {
-        alert("尚未在 Vercel 設定 API_KEY！請先設定金鑰並點擊 Redeploy。");
-        setLoading(false);
-        return;
-      }
-      const ai = new GoogleGenAI({ apiKey });
-      const prompt = `你是維多的品牌助教。分析這 ${data.length} 份問卷：${JSON.stringify(data)}。請給予：1.每小題深度總結 2.學員Persona畫像 3.給維多老師的具體課前策略建議。輸出繁體中文 JSON。`;
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+      const prompt = `你是一位資深品牌專家與講師助教。分析以下 ${data.length} 份學員問卷：${JSON.stringify(data)}。請產出：1. 針對每小題學員回饋的深度總結 2. 整體學員的 Persona 畫像 3. 給授課講師維多老師的最終課程準備策略建議。請使用精煉、優雅的繁體中文。`;
+      
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
         contents: prompt,
@@ -183,7 +189,17 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
           responseSchema: {
             type: Type.OBJECT,
             properties: {
-              perQuestionInsight: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.NUMBER }, title: { type: Type.STRING }, insight: { type: Type.STRING } } } },
+              perQuestionInsight: { 
+                type: Type.ARRAY, 
+                items: { 
+                  type: Type.OBJECT, 
+                  properties: { 
+                    id: { type: Type.NUMBER }, 
+                    title: { type: Type.STRING }, 
+                    insight: { type: Type.STRING } 
+                  } 
+                } 
+              },
               studentPersona: { type: Type.STRING },
               courseStrategy: { type: Type.STRING }
             },
@@ -194,25 +210,25 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
       setAnalysis(JSON.parse(response.text.trim()));
     } catch (e) {
       console.error(e);
-      alert("AI 分析失敗，請確認 API_KEY 是否正確。");
+      alert("AI 分析遇到一點小波折，請確認 API_KEY 是否已在環境變數中設定正確。");
     } finally { setLoading(false); }
   };
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-32 pt-12 px-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-end border-b border-white/10 pb-8">
         <div>
           <h2 className="text-4xl font-black text-white italic">Master Center</h2>
           <p className="text-white/40 text-[10px] font-bold tracking-[0.4em] uppercase">維多品牌決策中心</p>
         </div>
         <button onClick={startAnalysis} disabled={loading || data.length === 0} className="px-10 py-5 bg-white text-slate-900 rounded-full font-black hover:scale-105 transition-all shadow-2xl active:scale-95 disabled:opacity-50">
-          {loading ? 'AI 正在分析學員靈魂...' : '生成學員品牌報告'}
+          {loading ? 'AI 正在透視學員靈魂...' : '生成學員品牌報告'}
         </button>
       </div>
 
       {analysis && (
         <div className="space-y-10 animate-in fade-in duration-1000">
-          <div className="glass-card p-12 rounded-[4rem] border-none shadow-2xl">
+          <div className="glass-card p-12 rounded-[4rem] border-none shadow-2xl bg-gradient-to-br from-white to-slate-50">
             <h3 className="text-3xl font-black mb-8 rainbow-text italic">最終課程準備建議</h3>
             <p className="text-slate-700 leading-loose text-xl font-medium whitespace-pre-wrap">{analysis.courseStrategy}</p>
           </div>
@@ -228,7 +244,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
                     <span className="text-[10px] font-black bg-slate-900 text-white px-3 py-1 rounded-full">{q.id}</span>
                     <p className="font-black text-slate-800 text-lg">{q.title}</p>
                   </div>
-                  <p className="text-slate-500 text-sm font-medium">{q.insight}</p>
+                  <p className="text-slate-500 text-sm font-medium leading-relaxed">{q.insight}</p>
                 </div>
               ))}
             </div>
@@ -257,7 +273,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
   );
 };
 
-// --- 主入口 ---
+// --- App 入口 ---
 export default function App() {
   const [data, setData] = useState<SurveyData[]>([]);
 
@@ -278,8 +294,8 @@ export default function App() {
     <HashRouter>
       <div className="min-h-screen flex flex-col">
         <nav className="p-8 px-12 flex justify-between items-center bg-black/20 backdrop-blur-3xl sticky top-0 z-50 border-b border-white/5">
-          <Link to="/" className="text-2xl font-black text-white tracking-tighter">
-            VICTOR<span className="rainbow-text font-light tracking-widest ml-3">BRANDING</span>
+          <Link to="/" className="text-2xl font-black text-white tracking-tighter hover:opacity-80 transition-opacity">
+            VICTOR<span className="rainbow-text font-light tracking-[0.3em] ml-3">BRANDING</span>
           </Link>
           <div className="flex space-x-12">
             <Link to="/" className="text-white/40 hover:text-white text-[10px] font-black uppercase tracking-[0.3em] transition-colors">Survey</Link>
