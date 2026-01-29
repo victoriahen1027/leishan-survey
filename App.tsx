@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
 
-// --- 資料型別 ---
+// --- 資料結構定義 ---
 interface SurveyData {
   id: string;
   timestamp: string;
@@ -31,7 +31,7 @@ interface AnalysisResult {
   courseStrategy: string;
 }
 
-// --- 問卷頁面 ---
+// --- 前台：精品品牌問卷 ---
 const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) => {
   const [form, setForm] = useState<Partial<SurveyData>>({
     gender: '女', hasIDA: '沒有', q5_hasExp: '沒有', q7_knowVictor: '不認識也沒聽過', q9_acceptWork: '可以'
@@ -47,7 +47,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
   };
 
   if (finished) return (
-    <div className="max-w-xl mx-auto glass-card p-20 rounded-[4rem] text-center mt-24 border-none shadow-2xl">
+    <div className="max-w-xl mx-auto glass-card p-20 rounded-[4rem] text-center mt-24 border-none shadow-2xl animate-in fade-in zoom-in duration-1000">
       <div className="text-7xl mb-8">✨</div>
       <h2 className="text-4xl font-black rainbow-text mb-6 italic">Successfully Sent</h2>
       <p className="text-slate-500 font-medium leading-relaxed">您的品味與期待已傳達。<br/>維多老師正在為您精心準備這場品牌盛宴。</p>
@@ -58,7 +58,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-16 py-12 pb-40 px-4">
       <div className="text-center space-y-4">
         <h1 className="text-7xl md:text-8xl font-black text-white tracking-widest drop-shadow-2xl">BRANDING</h1>
-        <p className="text-white/40 tracking-[0.8em] text-[10px] font-bold uppercase">維多品牌學｜學員課前專訪</p>
+        <p className="text-white/40 tracking-[0.8em] text-[10px] font-bold uppercase">學員課前調查｜維多品牌學</p>
       </div>
 
       <div className="glass-card p-10 md:p-12 rounded-[3.5rem] space-y-10 border-none shadow-2xl">
@@ -70,7 +70,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
           <input required placeholder="姓名" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all" onChange={e => setForm({...form, name: e.target.value})} />
           <input required type="number" placeholder="年齡" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all" onChange={e => setForm({...form, age: e.target.value})} />
           <select className="w-full p-5 rounded-2xl font-bold bg-slate-50 border border-slate-100" onChange={e => setForm({...form, gender: e.target.value})}>
-            <option>女</option><option>男</option>
+            <option>性別：女</option><option>性別：男</option>
           </select>
           <input required placeholder="職稱" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all" onChange={e => setForm({...form, jobTitle: e.target.value})} />
           <input required placeholder="進入磊山年份" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all md:col-span-2" onChange={e => setForm({...form, joinYear: e.target.value})} />
@@ -103,7 +103,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
             <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q4_knowledgeExpectation: e.target.value})} />
           </div>
           <div className="space-y-4">
-            <label className="block font-black text-slate-700">5. 曾經執行過品牌相關活動或文案嗎？</label>
+            <label className="block font-black text-slate-700">5. 曾經執行過品牌推廣相關活動或文案嗎？</label>
             <div className="flex space-x-12 pt-2">
               {['有', '沒有'].map(o => (
                 <label key={o} className="flex items-center space-x-3 cursor-pointer group">
@@ -114,22 +114,22 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
             </div>
           </div>
           {form.q5_hasExp === '有' && (
-            <div className="space-y-4">
-              <label className="block font-black text-slate-700 italic border-l-2 border-slate-900 pl-4">6. 說明做過哪些及成效：</label>
+            <div className="space-y-4 animate-in slide-in-from-top-4">
+              <label className="block font-black text-slate-700 italic border-l-2 border-slate-900 pl-4">6. 承上題，說明做過哪些及成效：</label>
               <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q6_expDetail: e.target.value})} />
             </div>
           )}
           <div className="space-y-4">
             <label className="block font-black text-slate-700">7. 你認識這次的授課講師「維多」嗎？</label>
-            <select className="w-full p-6 rounded-3xl font-black bg-slate-50 border border-slate-100" onChange={e => setForm({...form, q7_knowVictor: e.target.value})}>
+            <select className="w-full p-6 rounded-3xl font-black bg-slate-50 border border-slate-100 cursor-pointer" onChange={e => setForm({...form, q7_knowVictor: e.target.value})}>
               <option>認識，有接觸過</option>
               <option>有聽說過，但沒接觸過</option>
               <option>不認識也沒聽過</option>
             </select>
           </div>
           {form.q7_knowVictor !== '不認識也沒聽過' && (
-            <div className="space-y-4">
-              <label className="block font-black text-slate-700 italic border-l-2 border-slate-900 pl-4">8. 說說你對維多的了解：</label>
+            <div className="space-y-4 animate-in slide-in-from-top-4">
+              <label className="block font-black text-slate-700 italic border-l-2 border-slate-900 pl-4">8. 說說妳對維多的了解：</label>
               <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q8_victorDetail: e.target.value})} />
             </div>
           )}
@@ -151,7 +151,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
         </div>
 
         <button type="submit" className="w-full py-8 rounded-full bg-slate-900 text-white font-black text-2xl hover:scale-[1.02] transition-all shadow-2xl active:scale-95 group relative overflow-hidden">
-          <span className="relative z-10">傳遞品牌專訪</span>
+          <span className="relative z-10">傳遞我的品牌品味</span>
           <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 opacity-0 group-hover:opacity-20 transition-opacity"></div>
         </button>
       </div>
@@ -159,7 +159,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
   );
 };
 
-// --- 後台管理 ---
+// --- 後台：管理決策中心 ---
 const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -174,7 +174,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
         return;
       }
       const ai = new GoogleGenAI({ apiKey });
-      const prompt = `你是維多的品牌助教。分析這 ${data.length} 份問卷：${JSON.stringify(data)}。提供：1. 每小題總結見解 2. 學員 Persona 3. 課前準備策略。輸出 JSON 格式。`;
+      const prompt = `你是維多的品牌助教。分析這 ${data.length} 份問卷：${JSON.stringify(data)}。請給予：1.每小題深度總結 2.學員Persona畫像 3.給維多老師的具體課前策略建議。輸出繁體中文 JSON。`;
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
         contents: prompt,
@@ -206,7 +206,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
           <p className="text-white/40 text-[10px] font-bold tracking-[0.4em] uppercase">維多品牌決策中心</p>
         </div>
         <button onClick={startAnalysis} disabled={loading || data.length === 0} className="px-10 py-5 bg-white text-slate-900 rounded-full font-black hover:scale-105 transition-all shadow-2xl active:scale-95 disabled:opacity-50">
-          {loading ? 'AI 解構中...' : '生成學員品牌報告'}
+          {loading ? 'AI 正在分析學員靈魂...' : '生成學員品牌報告'}
         </button>
       </div>
 
@@ -248,7 +248,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
               </tr>
             ))}
             {data.length === 0 && (
-              <tr><td colSpan={4} className="p-20 text-center text-slate-300 font-black">尚未有學員提交問卷</td></tr>
+              <tr><td colSpan={4} className="p-20 text-center text-slate-300 font-black">目前尚無學員提交問卷</td></tr>
             )}
           </tbody>
         </table>
@@ -257,19 +257,21 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
   );
 };
 
-// --- 主應用 ---
+// --- 主入口 ---
 export default function App() {
   const [data, setData] = useState<SurveyData[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('victor_branding_db');
-    if (saved) setData(JSON.parse(saved));
+    try {
+      const saved = localStorage.getItem('victor_branding_db_v2');
+      if (saved) setData(JSON.parse(saved));
+    } catch (e) { console.error("Data load error", e); }
   }, []);
 
   const handleSave = (d: SurveyData) => {
     const next = [d, ...data];
     setData(next);
-    localStorage.setItem('victor_branding_db', JSON.stringify(next));
+    localStorage.setItem('victor_branding_db_v2', JSON.stringify(next));
   };
 
   return (
