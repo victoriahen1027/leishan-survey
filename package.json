@@ -1,0 +1,9 @@
+
+{
+  "name": "維多品牌學｜精品課前調查系統",
+  "description": "專為磊山夥伴設計的虹彩質感問卷，具備 AI 深度學員分析與課程洞察功能。",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
