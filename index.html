@@ -46,6 +46,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        /* 避免頁面跳動 */
+        #root { min-height: 100vh; }
     </style>
 <script type="importmap">
 {
@@ -64,6 +66,6 @@
 <body>
     <div class="rainbow-mesh"></div>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
