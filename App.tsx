@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
 
-// --- 資料結構定義 ---
+// --- 資料結構 ---
 interface SurveyData {
   id: string;
   timestamp: string;
@@ -30,7 +30,7 @@ interface AnalysisResult {
   courseStrategy: string;
 }
 
-// --- 前台：精品品牌問卷組件 ---
+// --- 前台問卷頁面 ---
 const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) => {
   const [form, setForm] = useState<Partial<SurveyData>>({
     gender: '女', hasIDA: '沒有', q5_hasExp: '沒有', q7_knowVictor: '不認識也沒聽過', q9_acceptWork: '可以'
@@ -46,7 +46,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
   };
 
   if (finished) return (
-    <div className="max-w-xl mx-auto glass-card p-20 rounded-[4rem] text-center mt-24 border-none shadow-2xl animate-in fade-in zoom-in duration-1000">
+    <div className="max-w-xl mx-auto glass-card p-20 rounded-[4rem] text-center mt-24 animate-in fade-in zoom-in duration-1000 shadow-2xl">
       <div className="text-7xl mb-8">✨</div>
       <h2 className="text-4xl font-black rainbow-text mb-6 italic">Taste Received</h2>
       <p className="text-slate-500 font-medium leading-relaxed">您的品味與期待已傳達。<br/>維多老師正在為您精心準備這場品牌盛宴。</p>
@@ -60,8 +60,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
         <p className="text-white/40 tracking-[0.8em] text-[10px] font-bold uppercase">學員課前調查｜維多品牌學</p>
       </div>
 
-      {/* 基本資料卡片 */}
-      <div className="glass-card p-10 md:p-12 rounded-[3.5rem] space-y-10 border-none shadow-2xl">
+      <div className="glass-card p-10 md:p-12 rounded-[3.5rem] space-y-10 shadow-2xl">
         <div className="border-l-4 border-pink-500 pl-6">
           <h3 className="text-2xl font-black text-slate-800">基本背景調查</h3>
           <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Base Information</p>
@@ -80,8 +79,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
         </div>
       </div>
 
-      {/* 品牌深度問項卡片 */}
-      <div className="glass-card p-10 md:p-12 rounded-[3.5rem] space-y-12 border-none shadow-2xl">
+      <div className="glass-card p-10 md:p-12 rounded-[3.5rem] space-y-12 shadow-2xl">
         <div className="border-l-4 border-cyan-400 pl-6">
           <h3 className="text-2xl font-black text-slate-800">深度品牌洞察</h3>
           <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Brand Insights</p>
@@ -162,7 +160,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
         </div>
 
         <button type="submit" className="w-full py-8 rounded-full bg-slate-900 text-white font-black text-2xl hover:scale-[1.02] transition-all shadow-2xl active:scale-95 group relative overflow-hidden">
-          <span className="relative z-10">傳遞我的品牌品味</span>
+          <span className="relative z-10 tracking-widest">傳遞我的品牌品味</span>
           <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 opacity-0 group-hover:opacity-20 transition-opacity"></div>
         </button>
       </div>
@@ -170,7 +168,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
   );
 };
 
-// --- 後台：管理決策中心組件 ---
+// --- 後台管理中心 ---
 const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -179,7 +177,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
     setLoading(true);
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
-      const prompt = `你是一位資深品牌專家與講師助教。分析以下 ${data.length} 份學員問卷：${JSON.stringify(data)}。請產出：1. 針對每小題學員回饋的深度總結 2. 整體學員的 Persona 畫像 3. 給授課講師維多老師的最終課程準備策略建議。請使用精煉、優雅的繁體中文。`;
+      const prompt = `你是一位資深品牌專家。分析以下學員問卷：${JSON.stringify(data)}。請產出 JSON：1. 每題深度總結 2. 學員 Persona 畫像 3. 給維多老師的課程策略建議。使用繁體中文。`;
       
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
@@ -189,17 +187,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
           responseSchema: {
             type: Type.OBJECT,
             properties: {
-              perQuestionInsight: { 
-                type: Type.ARRAY, 
-                items: { 
-                  type: Type.OBJECT, 
-                  properties: { 
-                    id: { type: Type.NUMBER }, 
-                    title: { type: Type.STRING }, 
-                    insight: { type: Type.STRING } 
-                  } 
-                } 
-              },
+              perQuestionInsight: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { id: { type: Type.NUMBER }, title: { type: Type.STRING }, insight: { type: Type.STRING } } } },
               studentPersona: { type: Type.STRING },
               courseStrategy: { type: Type.STRING }
             },
@@ -209,8 +197,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
       });
       setAnalysis(JSON.parse(response.text.trim()));
     } catch (e) {
-      console.error(e);
-      alert("AI 分析遇到一點小波折，請確認 API_KEY 是否已在環境變數中設定正確。");
+      alert("AI 分析失敗，請確認 API KEY 是否正確。");
     } finally { setLoading(false); }
   };
 
@@ -228,22 +215,19 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
 
       {analysis && (
         <div className="space-y-10 animate-in fade-in duration-1000">
-          <div className="glass-card p-12 rounded-[4rem] border-none shadow-2xl bg-gradient-to-br from-white to-slate-50">
+          <div className="glass-card p-12 rounded-[4rem] bg-gradient-to-br from-white to-slate-50">
             <h3 className="text-3xl font-black mb-8 rainbow-text italic">最終課程準備建議</h3>
             <p className="text-slate-700 leading-loose text-xl font-medium whitespace-pre-wrap">{analysis.courseStrategy}</p>
           </div>
           <div className="grid lg:grid-cols-3 gap-8">
-            <div className="glass-card p-10 rounded-[3rem] border-none shadow-xl">
+            <div className="glass-card p-10 rounded-[3rem]">
               <h4 className="text-xs font-black text-purple-500 uppercase tracking-widest mb-6 italic">學員樣態畫像</h4>
               <p className="text-slate-600 font-bold leading-relaxed">{analysis.studentPersona}</p>
             </div>
             <div className="lg:col-span-2 space-y-6">
               {analysis.perQuestionInsight.map(q => (
-                <div key={q.id} className="glass-card p-8 rounded-[2.5rem] border-none shadow-lg">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <span className="text-[10px] font-black bg-slate-900 text-white px-3 py-1 rounded-full">{q.id}</span>
-                    <p className="font-black text-slate-800 text-lg">{q.title}</p>
-                  </div>
+                <div key={q.id} className="glass-card p-8 rounded-[2.5rem]">
+                  <p className="font-black text-slate-800 text-lg mb-4">{q.title}</p>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed">{q.insight}</p>
                 </div>
               ))}
@@ -252,7 +236,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
         </div>
       )}
 
-      <div className="glass-card rounded-[3.5rem] overflow-hidden border-none shadow-2xl overflow-x-auto">
+      <div className="glass-card rounded-[3.5rem] overflow-hidden shadow-2xl overflow-x-auto">
         <table className="w-full text-left min-w-[600px]">
           <thead className="bg-slate-50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
             <tr><th className="px-10 py-6">Name</th><th className="px-10 py-6">Title</th><th className="px-10 py-6">Favorite</th><th className="px-10 py-6">Date</th></tr>
@@ -273,32 +257,28 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
   );
 };
 
-// --- App 入口 ---
 export default function App() {
   const [data, setData] = useState<SurveyData[]>([]);
-
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('victor_branding_db_v2');
-      if (saved) setData(JSON.parse(saved));
-    } catch (e) { console.error("Data load error", e); }
+    const saved = localStorage.getItem('v_branding_data');
+    if (saved) setData(JSON.parse(saved));
   }, []);
 
   const handleSave = (d: SurveyData) => {
     const next = [d, ...data];
     setData(next);
-    localStorage.setItem('victor_branding_db_v2', JSON.stringify(next));
+    localStorage.setItem('v_branding_data', JSON.stringify(next));
   };
 
   return (
     <HashRouter>
       <div className="min-h-screen flex flex-col">
         <nav className="p-8 px-12 flex justify-between items-center bg-black/20 backdrop-blur-3xl sticky top-0 z-50 border-b border-white/5">
-          <Link to="/" className="text-2xl font-black text-white tracking-tighter hover:opacity-80 transition-opacity">
+          <Link to="/" className="text-2xl font-black text-white tracking-tighter">
             VICTOR<span className="rainbow-text font-light tracking-[0.3em] ml-3">BRANDING</span>
           </Link>
           <div className="flex space-x-12">
-            <Link to="/" className="text-white/40 hover:text-white text-[10px] font-black uppercase tracking-[0.3em] transition-colors">Survey</Link>
+            <Link to="/" className="text-white/40 hover:text-white text-[10px] font-black uppercase tracking-[0.3em]">Survey</Link>
             <Link to="/admin" className="px-6 py-2 rounded-full border border-white/20 text-white hover:bg-white hover:text-slate-900 transition-all text-[10px] font-black uppercase tracking-[0.3em]">Master Center</Link>
           </div>
         </nav>
