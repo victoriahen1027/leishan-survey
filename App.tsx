@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
 
-// --- 資料結構 ---
+// --- 資料類型定義 ---
 interface SurveyData {
   id: string;
   timestamp: string;
@@ -46,7 +46,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
   };
 
   if (finished) return (
-    <div className="max-w-xl mx-auto glass-card p-20 rounded-[4rem] text-center mt-24 animate-in fade-in zoom-in duration-1000 shadow-2xl">
+    <div className="max-w-xl mx-auto glass-card p-20 rounded-[4rem] text-center mt-24 shadow-2xl animate-in fade-in zoom-in duration-1000">
       <div className="text-7xl mb-8">✨</div>
       <h2 className="text-4xl font-black rainbow-text mb-6 italic">Taste Received</h2>
       <p className="text-slate-500 font-medium leading-relaxed">您的品味與期待已傳達。<br/>維多老師正在為您精心準備這場品牌盛宴。</p>
@@ -66,14 +66,14 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
           <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Base Information</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <input required placeholder="姓名" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all" onChange={e => setForm({...form, name: e.target.value})} />
-          <input required type="number" placeholder="年齡" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all" onChange={e => setForm({...form, age: e.target.value})} />
-          <select className="w-full p-5 rounded-2xl font-bold bg-slate-50 border border-slate-100" onChange={e => setForm({...form, gender: e.target.value})}>
-            <option>性別：女</option><option>性別：男</option>
+          <input required placeholder="姓名" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all text-slate-900" onChange={e => setForm({...form, name: e.target.value})} />
+          <input required type="number" placeholder="年齡" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all text-slate-900" onChange={e => setForm({...form, age: e.target.value})} />
+          <select className="w-full p-5 rounded-2xl font-bold bg-slate-50 border border-slate-100 text-slate-900" onChange={e => setForm({...form, gender: e.target.value})}>
+            <option>女</option><option>男</option>
           </select>
-          <input required placeholder="職稱" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all" onChange={e => setForm({...form, jobTitle: e.target.value})} />
-          <input required placeholder="進入磊山年份" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all md:col-span-2" onChange={e => setForm({...form, joinYear: e.target.value})} />
-          <select className="w-full p-5 rounded-2xl font-bold bg-slate-50 border border-slate-100 md:col-span-2" onChange={e => setForm({...form, hasIDA: e.target.value})}>
+          <input required placeholder="職稱" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all text-slate-900" onChange={e => setForm({...form, jobTitle: e.target.value})} />
+          <input required placeholder="進入磊山年份" className="w-full p-5 rounded-2xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all md:col-span-2 text-slate-900" onChange={e => setForm({...form, joinYear: e.target.value})} />
+          <select className="w-full p-5 rounded-2xl font-bold bg-slate-50 border border-slate-100 md:col-span-2 text-slate-900" onChange={e => setForm({...form, hasIDA: e.target.value})}>
             <option value="沒有">有無 IDA 資格：沒有</option><option value="有">有無 IDA 資格：有</option>
           </select>
         </div>
@@ -88,22 +88,22 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
         <div className="space-y-10">
           <div className="space-y-4">
             <label className="block font-black text-slate-700 leading-relaxed">1. 你認為什麼是【品牌】？<br/><span className="text-xs text-slate-400 font-medium italic">（請以個人認知回覆，勿上網搜索或問 AI）</span></label>
-            <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q1_brandDefinition: e.target.value})} />
+            <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none text-slate-900" onChange={e => setForm({...form, q1_brandDefinition: e.target.value})} />
           </div>
 
           <div className="space-y-4">
             <label className="block font-black text-slate-700">2. 你個人最喜歡的【品牌】是哪一個？</label>
-            <input required placeholder="不限產業" className="w-full p-6 rounded-3xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all" onChange={e => setForm({...form, q2_favoriteBrand: e.target.value})} />
+            <input required placeholder="不限產業" className="w-full p-6 rounded-3xl outline-none font-bold bg-slate-50 border border-slate-100 focus:bg-white transition-all text-slate-900" onChange={e => setForm({...form, q2_favoriteBrand: e.target.value})} />
           </div>
 
           <div className="space-y-4">
             <label className="block font-black text-slate-700">3. 為什麼喜歡？<span className="text-xs text-purple-500 ml-2 font-bold italic">至少 3 點原因</span></label>
-            <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q3_whyFavorite: e.target.value})} />
+            <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none text-slate-900" onChange={e => setForm({...form, q3_whyFavorite: e.target.value})} />
           </div>
 
           <div className="space-y-4">
             <label className="block font-black text-slate-700">4. 你希望從課堂中獲得那些知識？</label>
-            <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q4_knowledgeExpectation: e.target.value})} />
+            <textarea required className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none text-slate-900" onChange={e => setForm({...form, q4_knowledgeExpectation: e.target.value})} />
           </div>
 
           <div className="space-y-4">
@@ -121,13 +121,13 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
           {form.q5_hasExp === '有' && (
             <div className="space-y-4 animate-in slide-in-from-top-4">
               <label className="block font-black text-slate-700 italic border-l-2 border-slate-900 pl-4">6. 承上題，說明做過哪些及成效：</label>
-              <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q6_expDetail: e.target.value})} />
+              <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none text-slate-900" onChange={e => setForm({...form, q6_expDetail: e.target.value})} />
             </div>
           )}
 
           <div className="space-y-4">
             <label className="block font-black text-slate-700">7. 你認識這次的授課講師「維多」嗎？</label>
-            <select className="w-full p-6 rounded-3xl font-black bg-slate-50 border border-slate-100 cursor-pointer" onChange={e => setForm({...form, q7_knowVictor: e.target.value})}>
+            <select className="w-full p-6 rounded-3xl font-black bg-slate-50 border border-slate-100 cursor-pointer text-slate-900" onChange={e => setForm({...form, q7_knowVictor: e.target.value})}>
               <option>認識，有接觸過</option>
               <option>有聽說過，但沒接觸過</option>
               <option>不認識也沒聽過</option>
@@ -137,7 +137,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
           {form.q7_knowVictor !== '不認識也沒聽過' && (
             <div className="space-y-4 animate-in slide-in-from-top-4">
               <label className="block font-black text-slate-700 italic border-l-2 border-slate-900 pl-4">8. 說說妳對維多的了解：</label>
-              <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q8_victorDetail: e.target.value})} />
+              <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none text-slate-900" onChange={e => setForm({...form, q8_victorDetail: e.target.value})} />
             </div>
           )}
 
@@ -155,12 +155,12 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
 
           <div className="space-y-4">
             <label className="block font-black text-slate-700">10. 有沒有想先對講師許的願？</label>
-            <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none" onChange={e => setForm({...form, q10_wishes: e.target.value})} placeholder="維多老師，我希望..." />
+            <textarea className="w-full p-6 rounded-3xl h-32 outline-none font-medium bg-slate-50 border border-slate-100 focus:bg-white transition-all resize-none text-slate-900" onChange={e => setForm({...form, q10_wishes: e.target.value})} placeholder="維多老師，我希望..." />
           </div>
         </div>
 
         <button type="submit" className="w-full py-8 rounded-full bg-slate-900 text-white font-black text-2xl hover:scale-[1.02] transition-all shadow-2xl active:scale-95 group relative overflow-hidden">
-          <span className="relative z-10 tracking-widest">傳遞我的品牌品味</span>
+          <span className="relative z-10 tracking-[0.2em]">傳遞我的品牌品味</span>
           <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 opacity-0 group-hover:opacity-20 transition-opacity"></div>
         </button>
       </div>
@@ -168,7 +168,7 @@ const SurveyForm: React.FC<{ onSave: (d: SurveyData) => void }> = ({ onSave }) =
   );
 };
 
-// --- 後台管理中心 ---
+// --- 後台頁面 ---
 const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -177,7 +177,11 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
     setLoading(true);
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
-      const prompt = `你是一位資深品牌專家。分析以下學員問卷：${JSON.stringify(data)}。請產出 JSON：1. 每題深度總結 2. 學員 Persona 畫像 3. 給維多老師的課程策略建議。使用繁體中文。`;
+      const prompt = `妳是維多老師的 AI 品牌專家助教。分析以下學員問卷：${JSON.stringify(data)}。
+      請針對 10 個問題提供綜合見解，並產出 JSON 格式：
+      1. perQuestionInsight: 每題的數據總結
+      2. studentPersona: 學員整體畫像
+      3. courseStrategy: 給維多老師的最終課程準備建議。`;
       
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
@@ -209,25 +213,25 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
           <p className="text-white/40 text-[10px] font-bold tracking-[0.4em] uppercase">維多品牌決策中心</p>
         </div>
         <button onClick={startAnalysis} disabled={loading || data.length === 0} className="px-10 py-5 bg-white text-slate-900 rounded-full font-black hover:scale-105 transition-all shadow-2xl active:scale-95 disabled:opacity-50">
-          {loading ? 'AI 正在透視學員靈魂...' : '生成學員品牌報告'}
+          {loading ? 'AI 分析中...' : '生成學員品牌報告'}
         </button>
       </div>
 
       {analysis && (
         <div className="space-y-10 animate-in fade-in duration-1000">
-          <div className="glass-card p-12 rounded-[4rem] bg-gradient-to-br from-white to-slate-50">
-            <h3 className="text-3xl font-black mb-8 rainbow-text italic">最終課程準備建議</h3>
+          <div className="glass-card p-12 rounded-[4rem] border-none shadow-2xl bg-gradient-to-br from-white to-slate-50">
+            <h3 className="text-3xl font-black mb-8 rainbow-text italic text-slate-900">最終課程準備建議</h3>
             <p className="text-slate-700 leading-loose text-xl font-medium whitespace-pre-wrap">{analysis.courseStrategy}</p>
           </div>
           <div className="grid lg:grid-cols-3 gap-8">
-            <div className="glass-card p-10 rounded-[3rem]">
+            <div className="glass-card p-10 rounded-[3rem] shadow-xl text-slate-800">
               <h4 className="text-xs font-black text-purple-500 uppercase tracking-widest mb-6 italic">學員樣態畫像</h4>
-              <p className="text-slate-600 font-bold leading-relaxed">{analysis.studentPersona}</p>
+              <p className="font-bold leading-relaxed">{analysis.studentPersona}</p>
             </div>
             <div className="lg:col-span-2 space-y-6">
               {analysis.perQuestionInsight.map(q => (
-                <div key={q.id} className="glass-card p-8 rounded-[2.5rem]">
-                  <p className="font-black text-slate-800 text-lg mb-4">{q.title}</p>
+                <div key={q.id} className="glass-card p-8 rounded-[2.5rem] shadow-lg text-slate-800">
+                  <p className="font-black text-lg mb-4">{q.id}. {q.title}</p>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed">{q.insight}</p>
                 </div>
               ))}
@@ -236,7 +240,7 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
         </div>
       )}
 
-      <div className="glass-card rounded-[3.5rem] overflow-hidden shadow-2xl overflow-x-auto">
+      <div className="glass-card rounded-[3.5rem] overflow-hidden shadow-2xl overflow-x-auto border-none">
         <table className="w-full text-left min-w-[600px]">
           <thead className="bg-slate-50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
             <tr><th className="px-10 py-6">Name</th><th className="px-10 py-6">Title</th><th className="px-10 py-6">Favorite</th><th className="px-10 py-6">Date</th></tr>
@@ -247,9 +251,6 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
                 <td className="px-10 py-8">{s.name}</td><td className="px-10 py-8">{s.jobTitle}</td><td className="px-10 py-8 text-purple-600">{s.q2_favoriteBrand}</td><td className="px-10 py-8 text-slate-300 text-xs">{new Date(s.timestamp).toLocaleDateString()}</td>
               </tr>
             ))}
-            {data.length === 0 && (
-              <tr><td colSpan={4} className="p-20 text-center text-slate-300 font-black">目前尚無學員提交問卷</td></tr>
-            )}
           </tbody>
         </table>
       </div>
@@ -260,14 +261,14 @@ const AdminPanel: React.FC<{ data: SurveyData[] }> = ({ data }) => {
 export default function App() {
   const [data, setData] = useState<SurveyData[]>([]);
   useEffect(() => {
-    const saved = localStorage.getItem('v_branding_data');
+    const saved = localStorage.getItem('victor_branding_db');
     if (saved) setData(JSON.parse(saved));
   }, []);
 
   const handleSave = (d: SurveyData) => {
     const next = [d, ...data];
     setData(next);
-    localStorage.setItem('v_branding_data', JSON.stringify(next));
+    localStorage.setItem('victor_branding_db', JSON.stringify(next));
   };
 
   return (
@@ -275,7 +276,7 @@ export default function App() {
       <div className="min-h-screen flex flex-col">
         <nav className="p-8 px-12 flex justify-between items-center bg-black/20 backdrop-blur-3xl sticky top-0 z-50 border-b border-white/5">
           <Link to="/" className="text-2xl font-black text-white tracking-tighter">
-            VICTOR<span className="rainbow-text font-light tracking-[0.3em] ml-3">BRANDING</span>
+            VICTOR<span className="rainbow-text font-light tracking-[0.3em] ml-3 uppercase">Branding</span>
           </Link>
           <div className="flex space-x-12">
             <Link to="/" className="text-white/40 hover:text-white text-[10px] font-black uppercase tracking-[0.3em]">Survey</Link>
